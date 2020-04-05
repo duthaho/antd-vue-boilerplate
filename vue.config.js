@@ -20,6 +20,17 @@ module.exports = {
   css: {
     // Enable CSS source maps.
     sourceMap: true,
+    loaderOptions: {
+      less: {
+        modifyVars: {
+          // 'primary-color': '#F5222D',
+          // 'link-color': '#F5222D',
+          'border-radius-base': '2px',
+        },
+        // DO NOT REMOVE THIS LINE
+        javascriptEnabled: true,
+      },
+    },
   },
   // Configure Webpack's dev server.
   // https://cli.vuejs.org/guide/cli-service.html

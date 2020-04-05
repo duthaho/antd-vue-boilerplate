@@ -8,13 +8,12 @@ const aliases = {
   '@config': 'src/config',
   '@core': 'src/core',
   '@router': 'src/router',
-  '@views': 'src/router/views',
-  '@layouts': 'src/router/layouts',
+  '@views': 'src/views',
+  '@layouts': 'src/layouts',
   '@components': 'src/components',
   '@assets': 'src/assets',
   '@utils': 'src/utils',
   '@state': 'src/state',
-  '@design': 'src/design/index.scss',
 }
 
 module.exports = {
