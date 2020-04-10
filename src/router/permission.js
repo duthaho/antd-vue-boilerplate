@@ -6,10 +6,10 @@ import '@components/NProgress/nprogress.less'
 NProgress.configure({ showSpinner: false })
 
 router.beforeEach((to, from, next) => {
-  NProgress.start() // start progress bar
+  NProgress.start()
   next()
 })
 
 router.afterEach(() => {
-  NProgress.done() // finish progress bar
+  NProgress.done()
 })

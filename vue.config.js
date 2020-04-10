@@ -5,6 +5,22 @@ module.exports = {
     // Set up all the aliases we use in our app.
     config.resolve.alias.clear().merge(require('./aliases.config').webpack)
 
+    const svgRule = config.module.rule('svg')
+    svgRule.uses.clear()
+    svgRule
+      .oneOf('inline')
+      .resourceQuery(/inline/)
+      .use('vue-svg-icon-loader')
+      .loader('vue-svg-icon-loader')
+      .end()
+      .end()
+      .oneOf('external')
+      .use('file-loader')
+      .loader('file-loader')
+      .options({
+        name: 'assets/[name].[hash:8].[ext]',
+      })
+
     // Don't allow importing .vue files without the extension, as
     // it's necessary for some Vetur autocompletions.
     config.resolve.extensions.delete('.vue')
@@ -36,10 +52,6 @@ module.exports = {
   // https://cli.vuejs.org/guide/cli-service.html
   devServer: {
     host: 'localhost',
-    ...(process.env.VUE_APP_API_BASE_URL
-      ? // Proxy API endpoints to the production base URL.
-        { proxy: { '/api': { target: process.env.VUE_APP_API_BASE_URL } } }
-      : // Proxy API endpoints a local mock API.
-        { before: require('./tests/mock-api') }),
+    port: 8000,
   },
 }

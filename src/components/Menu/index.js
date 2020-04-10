@@ -1,3 +1,4 @@
 import Menu from './menu'
+import UserMenu from './UserMenu.vue'
 
-export default Menu
+export { Menu, UserMenu }

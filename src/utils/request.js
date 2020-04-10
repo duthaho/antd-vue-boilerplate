@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import axios from 'axios'
 import notification from 'ant-design-vue/es/notification'
+
 import { VueAxios } from './axios'
+import { ACCESS_TOKEN } from '@state/types'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_API_BASE_URL,
@@ -18,7 +20,7 @@ const handleError = (error) => {
         description: data.message,
       })
     }
-    if (status === 401) {
+    if (status === 401 && !(data.result && data.result.isLogin)) {
       notification.error({
         message: 'Unauthorized',
         description: 'Authorization failed',
@@ -29,14 +31,14 @@ const handleError = (error) => {
 }
 
 service.interceptors.request.use((config) => {
-  const token = Vue.ls.get('ACCESS_TOKEN')
+  const token = Vue.ls.get(ACCESS_TOKEN)
   if (token) {
     config.headers.authorization = `Bearer ${token}`
   }
   return config
 }, handleError)
 
-service.interceptors.response.use((response) => response.data.handleError)
+service.interceptors.response.use((response) => response.data, handleError)
 
 const installer = {
   vm: {},

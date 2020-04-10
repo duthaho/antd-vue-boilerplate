@@ -37,18 +37,7 @@ export default {
   data() {
     return {
       collapsed: false,
-      menus: [
-        {
-          path: 'dashboard',
-          name: 'Home',
-          meta: { title: 'Home', icon: 'dashboard' },
-        },
-        {
-          path: 'profile',
-          name: 'Profile',
-          meta: { title: 'Profile', icon: 'user' },
-        },
-      ],
+      menus: [],
     }
   },
 }

@@ -5,6 +5,7 @@
         <div :class="['top-nav-header-index', theme]">
           <div class="header-index-wide">
             <div class="header-index-left">
+              <logo class="top-nav-header" :show-title="device !== 'mobile'" />
               <Menu
                 v-if="device !== 'mobile'"
                 mode="horizontal"
@@ -12,6 +13,7 @@
                 :theme="theme"
               />
             </div>
+            <user-menu class="header-index-right"></user-menu>
           </div>
         </div>
       </a-layout-header>
@@ -20,7 +22,8 @@
 </template>
 
 <script>
-import Menu from '@components/Menu'
+import { Menu, UserMenu } from '@components/Menu'
+import Logo from '@components/Logo'
 export default {
   name: 'Header',
   props: {
@@ -48,7 +51,7 @@ export default {
       default: 'desktop',
     },
   },
-  components: { Menu },
+  components: { Menu, UserMenu, Logo },
 }
 </script>
 

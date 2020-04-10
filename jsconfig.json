@@ -22,6 +22,14 @@
         "src/index.scss",
         "src/index.css"
       ],
+      "@api/*": ["src/api/*"],
+      "@api": [
+        "src/api/index.js",
+        "src/api/index.json",
+        "src/api/index.vue",
+        "src/api/index.scss",
+        "src/api/index.css"
+      ],
       "@config/*": ["src/config/*"],
       "@config": [
         "src/config/index.js",
