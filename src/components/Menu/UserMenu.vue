@@ -3,20 +3,20 @@
     <div class="content-box">
       <a-dropdown>
         <span class="action ant-dropdown-link user-dropdown-menu">
-          <a-avatar class="avatar" icon="user" />
+          <a-avatar class="avatar" icon="user" size="small" />
           <span>{{ userName }}</span>
         </span>
         <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-          <a-menu-item key="0">
-            <a href="javascript:;" @click="handeLogin">
-              <a-icon type="login" />
-              <span>Log in</span>
-            </a>
-          </a-menu-item>
-          <a-menu-item key="1">
+          <a-menu-item v-if="userName" key="0">
             <a href="javascript:;" @click="handleLogout">
               <a-icon type="logout" />
               <span>Log out</span>
+            </a>
+          </a-menu-item>
+          <a-menu-item v-else key="0">
+            <a href="javascript:;" @click="handeLogin">
+              <a-icon type="login" />
+              <span>Log in</span>
             </a>
           </a-menu-item>
         </a-menu>
@@ -31,23 +31,20 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'UserMenu',
   computed: {
-    ...mapGetters(['userName']),
+    ...mapGetters('user', ['userName']),
   },
   methods: {
-    ...mapActions(['Logout']),
+    ...mapActions('user', ['Logout']),
     handleLogout() {
       this.$confirm({
         content: 'Do you really want to log out?',
         onOk: () => {
           return this.Logout({})
             .then(() => {
-              this.$message.success('Success')
+              this.$router.replace('/dashboard').catch(() => {})
             })
             .catch((err) => {
-              this.$message.error({
-                title: 'Error',
-                description: err.message,
-              })
+              this.$message.error(err.message)
             })
         },
         onCancel() {},

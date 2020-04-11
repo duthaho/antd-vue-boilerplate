@@ -3,7 +3,7 @@ import router from '@router'
 import store from '@state/store'
 import App from './App.vue'
 
-import './mock'
+process.env.VUE_APP_USE_MOCK_API && require('./mock')
 
 import bootstrap from '@core/bootstrap'
 import '@core/plugins'

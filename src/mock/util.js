@@ -1,28 +1,20 @@
-const responseBody = {
-  message: '',
-  timestamp: 0,
-  result: null,
-  code: 0,
-}
-
 export const builder = (data, message, code = 0, headers = {}) => {
-  responseBody.result = data
   if (message !== undefined && message !== null) {
-    responseBody.message = message
+    data.message = message
   }
   if (code !== undefined && code !== 0) {
-    responseBody.code = code
-    responseBody._status = code
+    data.code = code
+    data._status = code
   }
   if (
     headers !== null &&
     typeof headers === 'object' &&
     Object.keys(headers).length > 0
   ) {
-    responseBody._headers = headers
+    data._headers = headers
   }
-  responseBody.timestamp = new Date().getTime()
-  return responseBody
+  data.timestamp = new Date().getTime()
+  return data
 }
 
 export const getQueryParameters = (options) => {

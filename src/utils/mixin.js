@@ -52,17 +52,17 @@ const AppDeviceEnquire = {
     deviceEnquire((deviceType) => {
       switch (deviceType) {
         case DEVICE_TYPE.DESKTOP:
-          $store.commit('TOGGLE_DEVICE', 'desktop')
-          $store.dispatch('SetSidebar', true)
+          $store.commit('app/TOGGLE_DEVICE', 'desktop')
+          $store.dispatch('app/SetSidebar', true)
           break
         case DEVICE_TYPE.TABLET:
-          $store.commit('TOGGLE_DEVICE', 'tablet')
-          $store.dispatch('SetSidebar', false)
+          $store.commit('app/TOGGLE_DEVICE', 'tablet')
+          $store.dispatch('app/SetSidebar', false)
           break
         case DEVICE_TYPE.MOBILE:
         default:
-          $store.commit('TOGGLE_DEVICE', 'mobile')
-          $store.dispatch('SetSidebar', true)
+          $store.commit('app/TOGGLE_DEVICE', 'mobile')
+          $store.dispatch('app/SetSidebar', true)
           break
       }
     })

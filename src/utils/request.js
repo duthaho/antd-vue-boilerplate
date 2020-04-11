@@ -30,6 +30,14 @@ const handleError = (error) => {
   return Promise.reject(error)
 }
 
+const handleResponse = (response) => {
+  const { status, data } = response
+  if (status === 200 && data.success === false) {
+    return Promise.reject(new Error(data.message))
+  }
+  return data
+}
+
 service.interceptors.request.use((config) => {
   const token = Vue.ls.get(ACCESS_TOKEN)
   if (token) {
@@ -38,7 +46,7 @@ service.interceptors.request.use((config) => {
   return config
 }, handleError)
 
-service.interceptors.response.use((response) => response.data, handleError)
+service.interceptors.response.use(handleResponse, handleError)
 
 const installer = {
   vm: {},

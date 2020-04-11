@@ -8,11 +8,11 @@
       @submit="handleSubmit"
     >
       <a-alert
-        v-if="isLoginError"
+        v-if="errorMessage"
         type="error"
         showIcon
         style="margin-bottom: 24px;"
-        message="Incorrect username or password"
+        :message="errorMessage"
       />
       <a-form-item>
         <a-input
@@ -36,9 +36,8 @@
       </a-form-item>
 
       <a-form-item>
-        <a-input
+        <a-input-password
           size="large"
-          type="password"
           autocomplete="false"
           placeholder="Password"
           v-decorator="[
@@ -54,11 +53,21 @@
             type="lock"
             :style="{ color: 'rgba(0,0,0,.25)' }"
           />
-        </a-input>
+        </a-input-password>
+      </a-form-item>
+
+      <a-form-item>
+        <a-checkbox v-decorator="['rememberMe', { valuePropName: 'checked' }]"
+          >Remember me</a-checkbox
+        >
+        <router-link class="register" :to="{ name: 'Register' }"
+          >Register</router-link
+        >
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
         <a-button
+          icon="login"
           size="large"
           type="primary"
           htmlType="submit"
@@ -68,15 +77,6 @@
           >Login</a-button
         >
       </a-form-item>
-
-      <div class="user-login-other">
-        <router-link :to="{ name: 'Recover' }" class="forge-password"
-          >Forgot Password</router-link
-        >
-        <router-link class="register" :to="{ name: 'Register' }"
-          >Register</router-link
-        >
-      </div>
     </a-form>
   </div>
 </template>
@@ -89,11 +89,12 @@ export default {
     return {
       loginBtn: false,
       isLoginError: false,
+      errorMessage: '',
       form: this.$form.createForm(this),
     }
   },
   methods: {
-    ...mapActions(['Login']),
+    ...mapActions('user', ['Login']),
     handleSubmit(e) {
       e.preventDefault()
       const {
@@ -104,9 +105,9 @@ export default {
       validateFields({ force: true }, (err, values) => {
         if (!err) {
           this.loginBtn = true
-
+          values.captchar = 'duthaho'
           Login(values)
-            .then(this.loginSuccess)
+            .then(this.requestSuccess)
             .catch(this.requestFailed)
             .finally(() => {
               this.loginBtn = false
@@ -114,12 +115,20 @@ export default {
         }
       })
     },
-    loginSuccess() {
+    requestSuccess() {
       this.$router.push({ path: '/' })
-      this.isLoginError = false
+      this.errorMessage = null
     },
-    requestFailed() {
-      this.isLoginError = true
+    requestFailed(err) {
+      this.errorMessage = 'Something wrong'
+      if (err.response) {
+        const { data = {} } = err.response
+        this.errorMessage = Object.keys(data)
+          .map((k) => data[k])
+          .join(' ')
+      } else if (err.message) {
+        this.errorMessage = err.message
+      }
     },
   },
 }
@@ -131,14 +140,12 @@ export default {
     font-size: 14px;
   }
 
-  .getCaptcha {
-    display: block;
-    width: 100%;
-    height: 40px;
+  .forget-password {
+    font-size: 14px;
   }
 
-  .forge-password {
-    font-size: 14px;
+  .register {
+    float: right;
   }
 
   button.login-button {
@@ -153,7 +160,7 @@ export default {
     margin-top: 24px;
     line-height: 22px;
 
-    .forge-password {
+    .forget-password {
       float: left;
     }
 

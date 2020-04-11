@@ -3,18 +3,14 @@ import { MainLayout, UserLayout } from '@layouts'
 export default [
   {
     path: '/',
+    name: 'Index',
     component: MainLayout,
     redirect: '/dashboard',
     children: [
       {
         path: 'dashboard',
         name: 'Home',
-        component: () => import('@views/Home.vue'),
-      },
-      {
-        path: 'profile',
-        name: 'Profile',
-        component: () => import('@views/Profile.vue'),
+        component: () => import('@views/list/AccountList.vue'),
       },
     ],
   },

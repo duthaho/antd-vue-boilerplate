@@ -1,5 +1,5 @@
-import store from '@state/store'
+import dispatchAction from '@utils/dispatchAction'
 
 export default function initializer() {
-  store.dispatch('Init')
+  dispatchAction('Init')
 }

@@ -1,20 +1,25 @@
 import api from './index'
 import { axios } from '@utils/request'
 
-export function login(parameter) {
+export function login(data) {
   return axios({
     url: api.Login,
     method: 'post',
-    data: parameter,
+    data,
   })
 }
 
-export function getInfo() {
+export function register(data) {
   return axios({
-    url: '/user/info',
+    url: api.Register,
+    method: 'post',
+    data,
+  })
+}
+
+export function getMe() {
+  return axios({
+    url: api.GetMe,
     method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-    },
   })
 }

@@ -1,7 +1,7 @@
 const api = {
   // auth
   Login: '/auth/login',
-  // user
-  UserInfo: '/user/info',
+  Register: '/auth/register',
+  GetMe: '/auth/me',
 }
 export default api

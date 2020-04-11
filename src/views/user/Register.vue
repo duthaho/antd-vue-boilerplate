@@ -1,6 +1,39 @@
 <template>
   <div class="main user-layout-register">
     <a-form ref="formRegister" :form="form" id="formRegister">
+      <a-alert
+        v-if="errorMessage"
+        type="error"
+        showIcon
+        style="margin-bottom: 24px;"
+        :message="errorMessage"
+      />
+
+      <a-form-item>
+        <a-input
+          size="large"
+          type="text"
+          placeholder="Email"
+          v-decorator="[
+            'email',
+            {
+              rules: [
+                {
+                  required: true,
+                  type: 'email',
+                  message: 'Please enter email',
+                },
+              ],
+              validateTrigger: ['change', 'blur'],
+            },
+          ]"
+          ><a-icon
+            slot="prefix"
+            type="mail"
+            :style="{ color: 'rgba(0,0,0,.25)' }"
+        /></a-input>
+      </a-form-item>
+
       <a-form-item>
         <a-input
           size="large"
@@ -9,7 +42,7 @@
           v-decorator="[
             'username',
             {
-              rules: [{ required: true, message: 'Please input the username' }],
+              rules: [{ required: true, message: 'Please enter username' }],
               validateTrigger: ['change', 'blur'],
             },
           ]"
@@ -43,9 +76,8 @@
           </div>
         </template>
         <a-form-item>
-          <a-input
+          <a-input-password
             size="large"
-            type="password"
             @click="handlePasswordInputClick"
             autocomplete="false"
             placeholder="Password"
@@ -60,14 +92,13 @@
               slot="prefix"
               type="lock"
               :style="{ color: 'rgba(0,0,0,.25)' }"
-          /></a-input>
+          /></a-input-password>
         </a-form-item>
       </a-popover>
 
       <a-form-item>
-        <a-input
+        <a-input-password
           size="large"
-          type="password"
           autocomplete="false"
           placeholder="Confirm password"
           v-decorator="[
@@ -81,11 +112,12 @@
             slot="prefix"
             type="lock"
             :style="{ color: 'rgba(0,0,0,.25)' }"
-        /></a-input>
+        /></a-input-password>
       </a-form-item>
 
       <a-form-item>
         <a-button
+          icon="user-add"
           size="large"
           type="primary"
           htmlType="submit"
@@ -93,7 +125,7 @@
           :loading="registerBtn"
           @click.stop.prevent="handleSubmit"
           :disabled="registerBtn"
-          >Submit
+          >Register
         </a-button>
         <router-link class="login" :to="{ name: 'Login' }">Log in</router-link>
       </a-form-item>
@@ -102,13 +134,14 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import { mixinDevice } from '@utils/mixin'
 
 const levelNames = {
-  0: '低',
-  1: '低',
-  2: '中',
-  3: '强',
+  0: 'low',
+  1: 'low',
+  2: 'medium',
+  3: 'strong',
 }
 const levelClass = {
   0: 'error',
@@ -135,6 +168,7 @@ export default {
         percent: 10,
         progressColor: '#FF0000',
       },
+      errorMessage: null,
       registerBtn: false,
     }
   },
@@ -150,8 +184,16 @@ export default {
     },
   },
   methods: {
+    ...mapActions('user', ['Register']),
     handlePasswordLevel(rule, value, callback) {
       let level = 0
+
+      if (!value) {
+        return callback(new Error('Please enter password'))
+      }
+      if (!value || value.length < 6) {
+        return callback(new Error('Password too short'))
+      }
 
       if (/[0-9]/.test(value)) {
         level++
@@ -164,7 +206,7 @@ export default {
       }
       this.state.passwordLevel = level
       this.state.percent = level * 30
-      if (level >= 2) {
+      if (level >= 1) {
         if (level >= 3) {
           this.state.percent = 100
         }
@@ -200,23 +242,35 @@ export default {
       const {
         form: { validateFields },
         state,
-        $router,
       } = this
-      validateFields({ force: true }, (err) => {
+      validateFields({ force: true }, (err, values) => {
         if (!err) {
+          this.registerBtn = true
           state.passwordLevelChecked = false
-          $router.push({ name: 'Login' })
+          values.captchar = 'duthaho'
+          this.Register(values)
+            .then(this.requestSuccess)
+            .catch(this.requestFailed)
+            .finally(() => {
+              this.registerBtn = false
+            })
         }
       })
     },
+    requestSuccess() {
+      this.$router.push({ path: '/' })
+      this.errorMessage = null
+    },
     requestFailed(err) {
-      this.$notification['error']({
-        message: 'Error',
-        description:
-          ((err.response || {}).data || {}).message || 'Please try again',
-        duration: 4,
-      })
-      this.registerBtn = false
+      this.errorMessage = 'Something wrong'
+      if (err.response) {
+        const { data = {} } = err.response
+        this.errorMessage = Object.keys(data)
+          .map((k) => data[k])
+          .join(' ')
+      } else if (err.message) {
+        this.errorMessage = err.message
+      }
     },
   },
 }

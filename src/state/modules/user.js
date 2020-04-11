@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { login, getInfo } from '@api/userApi'
+import { login, getMe, register } from '@api/userApi'
 import { ACCESS_TOKEN, CURRENT_USER } from '@state/types'
 
 const user = {
@@ -12,6 +12,7 @@ const user = {
     token: (state) => state.token,
     userName: (state) => state.info && state.info.username,
     userRole: (state) => state.info && state.info.role,
+    userProfile: (state) => state.info && state.info.userProfile,
     userInfo: (state) => state.info,
   },
 
@@ -32,13 +33,9 @@ const user = {
     Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo)
-          .then((response) => {
-            const result = response.result
-
-            Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-            Vue.ls.set(CURRENT_USER, result.user, 7 * 24 * 60 * 60 * 1000)
-            commit('SET_TOKEN', result.token)
-            commit('SET_INFO', result.user)
+          .then((data) => {
+            Vue.ls.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000)
+            commit('SET_TOKEN', data.token)
 
             resolve()
           })
@@ -47,15 +44,28 @@ const user = {
           })
       })
     },
-    GetInfo({ commit }) {
+    Register({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
-        getInfo()
-          .then((response) => {
-            const result = response.result
+        register(userInfo)
+          .then((data) => {
+            Vue.ls.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000)
+            commit('SET_TOKEN', data.token)
 
-            commit('SET_INFO', result)
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    GetMe({ commit }) {
+      return new Promise((resolve, reject) => {
+        getMe()
+          .then((data) => {
+            commit('SET_INFO', data)
+            Vue.ls.set(CURRENT_USER, data)
 
-            resolve(response)
+            resolve(data)
           })
           .catch((error) => {
             reject(error)
