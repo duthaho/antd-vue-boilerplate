@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import VueStorage from 'vue-ls'
-import Antd from 'ant-design-vue'
 import { VueAxios } from '@utils/request'
 import appConfig from '@config/app.config'
 
-import 'ant-design-vue/dist/antd.less'
+if (process.env.NODE_ENV === 'development') {
+  require('./antd-prod')
+} else {
+  require('./antd-dev')
+}
 
-Vue.use(Antd)
-Vue.use(VueStorage, appConfig.storage)
+Vue.use(VueStorage, appConfig.storageOptions)
 Vue.use(VueAxios)

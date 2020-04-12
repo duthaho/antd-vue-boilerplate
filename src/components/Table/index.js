@@ -130,6 +130,19 @@ export default {
         typeof result.then === 'function'
       ) {
         result.then((r) => {
+          this.localPagination =
+            (this.showPagination &&
+              Object.assign({}, this.localPagination, {
+                current:
+                  (pagination && pagination.current) ||
+                  this.localPagination.current,
+                total: r.total,
+                showSizeChanger: this.showSizeChanger,
+                pageSize:
+                  (pagination && pagination.pageSize) ||
+                  this.localPagination.pageSize,
+              })) ||
+            false
           if (
             r.results.length === 0 &&
             this.showPagination &&
@@ -139,7 +152,6 @@ export default {
             this.loadData()
             return
           }
-
           try {
             if (
               ['auto', true].includes(this.showPagination) &&

@@ -24,7 +24,12 @@ router.beforeEach((to, from, next) => {
         })
         .catch(() => {
           store.dispatch('user/Logout').then(() => {
-            next({ path: '/user/login', query: { redirect: to.fullPath } })
+            if (whiteList.includes(to.name)) {
+              next()
+            } else {
+              next({ path: '/user/login', query: { redirect: to.fullPath } })
+              NProgress.done()
+            }
           })
         })
     }

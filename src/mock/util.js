@@ -1,3 +1,5 @@
+import querystring from 'query-string'
+
 export const builder = (data, message, code = 0, headers = {}) => {
   if (message !== undefined && message !== null) {
     data.message = message
@@ -18,19 +20,11 @@ export const builder = (data, message, code = 0, headers = {}) => {
 }
 
 export const getQueryParameters = (options) => {
-  const url = options.url
-  const search = url.split('?')[1]
+  const search = options.url.split('?')[1]
   if (!search) {
     return {}
   }
-  return JSON.parse(
-    '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"') +
-      '"}'
-  )
+  return querystring.parse(search, { arrayFormat: 'bracket' })
 }
 
 export const getBody = (options) => {

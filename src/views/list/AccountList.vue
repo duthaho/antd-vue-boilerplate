@@ -9,18 +9,18 @@
                 <a-select
                   allowClear
                   mode="multiple"
-                  v-model="queryParam.status"
+                  v-model="queryParam.services"
                   placeholder="Select service"
                 >
-                  <a-select-option value="0">Facebook</a-select-option>
-                  <a-select-option value="1">Amazon</a-select-option>
-                  <a-select-option value="2">Google</a-select-option>
+                  <a-select-option value="Facebook">Facebook</a-select-option>
+                  <a-select-option value="Amazon">Amazon</a-select-option>
+                  <a-select-option value="Google">Google</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <span class="table-page-search-submitButtons">
-                <a-button type="primary" @click="$refs.table.refresh(true)"
+                <a-button type="primary" @click="$refs.table.refresh()"
                   >Search</a-button
                 >
                 <a-button
@@ -45,6 +45,9 @@
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
+        <span slot="service" slot-scope="text">
+          <a-tag :color="text | serviceColor">{{ text }}</a-tag>
+        </span>
         <span slot="action" slot-scope="text, record">
           <a @click="handleBuy(record)">Buy</a>
         </span>
@@ -57,6 +60,7 @@
 import { mapGetters } from 'vuex'
 import { PageView } from '@layouts'
 import Table from '@components/Table'
+import { getAccountList } from '@api/accountApi'
 
 export default {
   components: { PageView, Table },
@@ -79,6 +83,12 @@ export default {
         {
           title: 'Service',
           dataIndex: 'service',
+          scopedSlots: { customRender: 'service' },
+        },
+        {
+          title: 'Updated at',
+          dataIndex: 'updatedAt',
+          sorter: true,
         },
         {
           title: 'Action',
@@ -88,27 +98,23 @@ export default {
         },
       ],
       loadData: (parameter) => {
-        console.log('loadData.parameter', parameter)
-        return new Promise((res) => {
-          setTimeout(
-            () =>
-              res({
-                total: 100,
-                results: [
-                  {
-                    id: 1,
-                    seller: 'admin',
-                    amount: 1,
-                    price: 1,
-                    service: 'google',
-                  },
-                ],
-              }),
-            1000
-          )
-        })
+        console.log({ ...parameter, ...this.queryParam })
+        return getAccountList({ ...parameter, ...this.queryParam }).then(
+          (res) => res
+        )
       },
     }
+  },
+  filters: {
+    serviceColor(service) {
+      return (
+        {
+          google: 'orange',
+          facebook: 'green',
+          amazon: 'cyan',
+        }[service.toLowerCase()] || 'purple'
+      )
+    },
   },
   computed: {
     ...mapGetters('user', ['userName']),
