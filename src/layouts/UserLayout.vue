@@ -3,10 +3,10 @@
     <div class="container">
       <div class="top">
         <div class="header">
-          <a href="/">
+          <router-link :to="{ name: 'Home' }">
             <img src="~@assets/logo.svg" class="logo" alt="logo" />
             <span class="title">Vue Boilerplate</span>
-          </a>
+          </router-link>
         </div>
       </div>
       <router-view />

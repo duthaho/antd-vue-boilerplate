@@ -12,7 +12,7 @@ export default {
   multiTab: false,
   production:
     process.env.NODE_ENV === 'production' &&
-    process.env.VUE_APP_PREVIEW !== 'true',
+    process.env.VUE_APP_USE_MOCK_API !== 'true',
   // vue-ls options
   storageOptions: {
     namespace: 'antdv__', // key prefix

@@ -1,11 +1,15 @@
 {
   "name": "antd-vue-boilerplate",
+  "homepage": "http://duthaho.github.io/antd-vue-boilerplate",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:preview": "vue-cli-service build --mode preview",
+    "predeploy": "yarn run build:preview",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "ant-design-vue": "^1.5.1",
@@ -33,6 +37,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.2.2",
+    "gh-pages": "^2.2.0",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "prettier": "^1.19.1",

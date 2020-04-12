@@ -54,4 +54,6 @@ module.exports = {
     host: 'localhost',
     port: 8000,
   },
+  publicPath:
+    process.env.NODE_ENV === 'production' ? '/antd-vue-boilerplate/' : '/',
 }

@@ -37,7 +37,7 @@
       <Table
         ref="table"
         size="default"
-        rowKey="key"
+        rowKey="id"
         :columns="columns"
         :data="loadData"
         showPagination="auto"
