@@ -3,7 +3,7 @@ import VueStorage from 'vue-ls'
 import { VueAxios } from '@utils/request'
 import appConfig from '@config/app.config'
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'production') {
   require('./antd-prod')
 } else {
   require('./antd-dev')
